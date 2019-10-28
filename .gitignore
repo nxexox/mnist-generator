@@ -1,0 +1,14 @@
+*.idea
+
+*.pyc
+__pycache__/
+
+venv
+python3
+python
+python2
+
+
+.env
+
+README.txt
