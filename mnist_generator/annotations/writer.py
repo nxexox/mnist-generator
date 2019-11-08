@@ -222,13 +222,14 @@ class AnnotationVOCPascalWriter(BaseAnnotationWriter):
 
         return base
 
-    def write(self, annotation: BaseAnnotation, storage: BaseStorage, path: str):
+    def write(self, annotation: BaseAnnotation, storage: BaseStorage, path: str, verbose: bool = False):
         """
         Write annotation to files.
 
         :param BaseAnnotation annotation: Annotation object.
         :param BaseStorage storage: Storage object.
         :param str path: Path for write annotation.
+        :param bool verbose: Verbose print progress?
 
         """
         for image_name, image_annotation in annotation.images.items():
@@ -236,3 +237,5 @@ class AnnotationVOCPascalWriter(BaseAnnotationWriter):
             obj = self._get_full_annotation(os.path.join(path, image_name), image_annotation)
             str_obj = ETXml.tostring(obj)
             storage.write('{}.xml'.format(full_path), str_obj)
+            if verbose:
+                print(f'Save annotation {full_path}')

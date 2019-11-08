@@ -109,12 +109,11 @@ class BTFCA(BTFC):
         else:
             yield imgs
 
-    def image_post_process(self, img: BTFCImage, index: int) -> BTFCImage:
+    def image_post_process(self, img: BTFCImage) -> BTFCImage:
         """
         Post processing image after save to storage.
 
         :param Image.Image img: Image for processing.
-        :param int index: Current image index in global cycle.
 
         :return: Processing image
         :rtype: BTFCImage
@@ -137,6 +136,6 @@ class BTFCA(BTFC):
                     font=img.font,
                     filename=self.get_result_file_name(_img)
                 )
-                self.save_image(btfc_img, index)
+                self.save_image(btfc_img)
 
         return img

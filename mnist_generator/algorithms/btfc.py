@@ -207,12 +207,11 @@ class BTFC(BaseAlgorithm):
         """
         yield images[key]
 
-    def image_post_process(self, img: BTFCImage, index: int) -> BTFCImage:
+    def image_post_process(self, img: BTFCImage) -> BTFCImage:
         """
         Post processing image after save to storage.
 
         :param Image.Image img: Image for processing.
-        :param int index: Current image index in global cycle.
 
         :return: Processing image
         :rtype: BTFCImage
@@ -220,22 +219,21 @@ class BTFC(BaseAlgorithm):
         """
         return img
 
-    def save_image(self, img: BTFCImage, index: int):
+    def save_image(self, img: BTFCImage):
         """
         Save image to storage.
 
         :param BTFCImage img: Image for save to storage.
-        :param int index: Current image index in global cycle.
 
         """
         # Get result filename
-        print(f'Save new IMAGE: {index}:{img.filename}')
         self._image_saver.write(img.filename, img.img)
-        index += 1
 
-    def run(self):
+    def run(self, verbose: bool = False):
         """
         Run BTFC algorithm.
+
+        :param bool verbose: Verbose debug messages?
 
         """
         index = 0
@@ -264,6 +262,9 @@ class BTFC(BaseAlgorithm):
                             image_name=img.filename
                         )
 
-                    img = self.image_post_process(img, index)
-                    self.save_image(img, index)
+                    img = self.image_post_process(img)
+                    self.save_image(img)
+                    index += 1
+                    if verbose:
+                        print(f'Save new IMAGE: {index}:{img.filename}')
                     del img

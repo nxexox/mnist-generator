@@ -22,6 +22,13 @@ ALLOWED_ANNOTATIONS_MODES = (
     ANNOTATION_SENTENCES_MODE, ANNOTATION_PARAGRAPHS_MODE,
     ANNOTATION_TEXT_BLOCKS_MODE
 )
+REGIONS_MAP = {
+    ANNOTATION_CHAR_MODE: 'char_regions',
+    ANNOTATION_WORDS_MODE: 'word_regions',
+    ANNOTATION_SENTENCES_MODE: 'sentences_regions',
+    ANNOTATION_PARAGRAPHS_MODE: 'paragraphs_regions',
+    ANNOTATION_TEXT_BLOCKS_MODE: 'texts_regions'
+}
 
 
 @dataclass
@@ -40,6 +47,7 @@ class Region(object):
 
 @dataclass
 class ImageAnnotation(object):
+    file_name: Optional[str] = None
     char_regions: List[Region] = field(default_factory=list)
     word_regions: List[Region] = field(default_factory=list)
     sentences_regions: List[Region] = field(default_factory=list)
@@ -53,13 +61,6 @@ class BaseAnnotation(abc.ABC):
 
     """
     text_parser_class = TextGeneratorParser
-    _regions_map = {
-        ANNOTATION_CHAR_MODE: 'char_regions',
-        ANNOTATION_WORDS_MODE: 'word_regions',
-        ANNOTATION_SENTENCES_MODE: 'sentences_regions',
-        ANNOTATION_PARAGRAPHS_MODE: 'paragraphs_regions',
-        ANNOTATION_TEXT_BLOCKS_MODE: 'texts_regions'
-    }
 
     def __init__(self, region_modes: List[str], text_parser_class: Optional[AbstractTextParser] = None):
         """
@@ -150,6 +151,7 @@ class Annotation(BaseAnnotation):
                 old_region[1] = _y - text_size[1]
 
                 if region_mode != ANNOTATION_CHAR_MODE or index_for_char % 2 == 0:
+                    self._images[image_name].file_name = image_name
                     self.add_new_region(
                         image_name=image_name, region_text=text_block,
                         region_position=RegionPosition(old_region[0], old_region[1], _x, _y),
@@ -170,5 +172,5 @@ class Annotation(BaseAnnotation):
 
         """
         image_annotation = self._images[image_name]  # type: ImageAnnotation
-        regions_array = getattr(image_annotation, self._regions_map[region_type])
+        regions_array = getattr(image_annotation, REGIONS_MAP[region_type])
         regions_array.append(Region(text=region_text, position=region_position))

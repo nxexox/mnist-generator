@@ -4,7 +4,7 @@ Storage vase classes.
 """
 import abc
 import os
-from typing import List, Union, Generator
+from typing import List, Union, Generator, Any
 
 
 class BaseStorage(abc.ABC):
@@ -110,6 +110,18 @@ class FileReader(object):
     def __len__(self) -> int:
         return self.storage.count(self._path)
 
+    def read_file(self, file_path: str) -> Any:
+        """
+        Read file.
+
+        :param str file_path: File path for read.
+
+        :return: FIle bytes
+        :rtype: Any
+
+        """
+        return self.storage.read(file_path, mode=self.file_mode)
+
     def get_files_patches_from_storage(self) -> Generator[str, None, None]:
         """
         Get files patches from storage.
@@ -131,7 +143,7 @@ class FileReader(object):
 
         """
         for file_path in self.get_files_patches_from_storage():
-            yield self.storage.read(file_path, mode=self.file_mode)
+            yield self.read_file(file_path)
 
 
 class FileWriter(object):

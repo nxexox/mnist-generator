@@ -3,6 +3,7 @@ Base classes for augmentations.
 
 """
 import abc
+from typing import Tuple, Optional
 
 from dataclasses import dataclass
 from PIL import Image
@@ -19,6 +20,7 @@ class AugmentationFigure(abc.ABC):
     y_min: int
     y_max: int
     border: int
+    fill: Optional[Tuple[int, int, int]] = (255, 255, 255)
 
     @classmethod
     @abc.abstractmethod

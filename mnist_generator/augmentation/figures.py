@@ -4,6 +4,7 @@ Figures for draw to image.
 """
 import random
 import math
+from typing import Tuple, Optional
 
 from PIL import ImageDraw as PILImageDraw, Image
 from dataclasses import dataclass
@@ -49,7 +50,7 @@ class AugmentationFigurePoint(AugmentationFigure, DrawObject):
 
         """
         draw = PILImageDraw.Draw(img)
-        draw.point((self.x_min, self.y_min), fill=(255, 255, 255))
+        draw.point((self.x_min, self.y_min), fill=self.fill)
         return img
 
 
@@ -91,7 +92,7 @@ class AugmentationFigureLine(AugmentationFigure, DrawObject):
 
         """
         draw = PILImageDraw.Draw(img)
-        draw.line((self.x_min, self.y_min, self.x_max, self.y_max), fill=(255, 255, 255), width=self.border)
+        draw.line((self.x_min, self.y_min, self.x_max, self.y_max), fill=self.fill, width=self.border)
         return img
 
 
@@ -101,6 +102,9 @@ class AugmentationFigureEllipse(AugmentationFigure, DrawObject):
     Augmentation Ellipse figure.
 
     """
+    fill: Optional[Tuple[int, int, int]] = None
+    outline: Tuple[int, int, int] = (255, 255, 255)
+
     @classmethod
     def generate_random_figure(cls, w: int, h: int, max_linethickness: int, max_diameter: int,
                                **kwargs) -> 'AugmentationFigure':
@@ -140,7 +144,7 @@ class AugmentationFigureEllipse(AugmentationFigure, DrawObject):
 
         """
         draw = PILImageDraw.Draw(img)
-        draw.ellipse((self.x_min, self.y_min, self.x_max, self.y_max), fill=None, outline=(255, 255, 255))
+        draw.ellipse((self.x_min, self.y_min, self.x_max, self.y_max), fill=self.fill, outline=self.outline)
         return img
 
 
@@ -150,6 +154,9 @@ class AugmentationFigureRectangle(AugmentationFigure, DrawObject):
     Augmentation Rectangle figure.
 
     """
+    fill: Optional[Tuple[int, int, int]] = None
+    outline: Tuple[int, int, int] = (255, 255, 255)
+
     @classmethod
     def generate_random_figure(cls, w: int, h: int, max_linethickness: int, max_diameter: int,
                                **kwargs) -> 'AugmentationFigure':
@@ -189,5 +196,8 @@ class AugmentationFigureRectangle(AugmentationFigure, DrawObject):
 
         """
         draw = PILImageDraw.Draw(img)
-        draw.rectangle((self.x_min, self.y_min, self.x_max, self.y_max), fill=None, outline=(255, 255, 255), width=self.border)
+        draw.rectangle(
+            (self.x_min, self.y_min, self.x_max, self.y_max),
+            fill=self.fill, outline=self.outline, width=self.border
+        )
         return img

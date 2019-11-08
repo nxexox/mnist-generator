@@ -11,5 +11,5 @@ class BaseAlgorithm(abc.ABC):
 
     """
     @abc.abstractmethod
-    def run(self):
+    def run(self, verbose: bool = False):
         pass

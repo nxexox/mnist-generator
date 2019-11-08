@@ -35,6 +35,18 @@ class ImageReader(FileReader):
     storage = LocalStorage()
     file_checker = ImageFileChecker()
 
+    def read_file(self, file_path: str) -> Image.Image:
+        """
+        Read file.
+
+        :param str file_path: File path for read.
+
+        :return: Image object
+        :rtype: Image.Image
+
+        """
+        return Image.open(file_path)
+
     def images_from_storage_generator(self) -> Generator[Image.Image, None, None]:
         """
         Generator for images from storage.
@@ -44,7 +56,7 @@ class ImageReader(FileReader):
 
         """
         for file_path in self.get_files_patches_from_storage():
-            yield Image.open(file_path)
+            yield self.read_file(file_path)
 
 
 class AbstractBackgrounds(abc.ABC):
